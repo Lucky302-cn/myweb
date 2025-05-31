@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微博登录</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f8fa 0%, #e1e8ed 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            display: flex;
+            max-width: 1000px;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .left-panel {
+            flex: 1;
+            background: linear-gradient(45deg, #ff4e50 0%, #f9d423 100%);
+            padding: 50px 40px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .left-panel::before {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            top: -150px;
+            right: -150px;
+        }
+        
+        .left-panel::after {
+            content: "";
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            bottom: -100px;
+            left: -100px;
+        }
+        
+        .logo {
+            font-size: 38px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            font-size: 42px;
+        }
+        
+        .slogan {
+            font-size: 24px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .features {
+            list-style: none;
+            margin-top: 40px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .features li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+        }
+        
+        .features li i {
+            margin-right: 10px;
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .right-panel {
+            flex: 1;
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .login-header h2 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .login-header p {
+            color: #777;
+            font-size: 14px;
+        }
+        
+        .login-form {
+            width: 100%;
+            max-width: 350px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-with-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #ff4e50;
+            box-shadow: 0 0 0 3px rgba(255, 78, 80, 0.2);
+            outline: none;
+        }
+        
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+        
+        .remember {
+            display: flex;
+            align-items: center;
+        }
+        
+        .remember input {
+            margin-right: 8px;
+        }
+        
+        .forgot-password {
+            color: #ff4e50;
+            text-decoration: none;
+        }
+        
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(45deg, #ff4e50, #f9d423);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(255, 78, 80, 0.3);
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 78, 80, 0.4);
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            margin: 30px 0;
+            color: #999;
+            font-size: 14px;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #eee;
+        }
+        
+        .divider span {
+            padding: 0 15px;
+        }
+        
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+        }
+        
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+            color: #555;
+            font-size: 18px;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: 1px solid #eee;
+        }
+        
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .social-btn.wechat:hover {
+            background: #2aae67;
+            color: white;
+        }
+        
+        .social-btn.qq:hover {
+            background: #12b7f5;
+            color: white;
+        }
+        
+        .social-btn.weibo:hover {
+            background: #e6162d;
+            color: white;
+        }
+        
+        .register-link {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .register-link a {
+            color: #ff4e50;
+            font-weight: 500;
+            text-decoration: none;
+        }
+        
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #999;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+        
+        .footer a {
+            color: #666;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+            color: #ff4e50;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .left-panel {
+                padding: 30px;
+            }
+            
+            .right-panel {
+                padding: 40px 30px;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="logo">
+                <i class="fab fa-weibo"></i>
+                <span>微博</span>
+            </div>
+            <div class="slogan">随时随地发现新鲜事</div>
+            <ul class="features">
+                <li><i class="fas fa-globe-asia"></i> 了解全球正在发生的新鲜事</li>
+                <li><i class="fas fa-users"></i> 随时和朋友分享身边的新鲜事</li>
+                <li><i class="fas fa-video"></i> 发现精彩短视频内容</li>
+                <li><i class="fas fa-star"></i> 追踪你感兴趣的明星和话题</li>
+            </ul>
+            <div style="margin-top: 30px; opacity: 0.8;">
+                <i class="fas fa-mobile-alt floating" style="font-size: 120px;"></i>
+            </div>
+        </div>
+        
+        <div class="right-panel">
+            <div class="login-header">
+                <h2>欢迎登录微博</h2>
+                <p>发现更多新鲜事，分享精彩瞬间</p>
+            </div>
+            
+            <form class="login-form">
+                <div class="form-group">
+                    <label for="username">手机号 / 邮箱</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" class="form-control" placeholder="请输入手机号或邮箱">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" class="form-control" placeholder="请输入密码">
+                    </div>
+                </div>
+                
+                <div class="remember-forgot">
+                    <div class="remember">
+                        <input type="checkbox" id="remember">
+                        <label for="remember">记住我</label>
+                    </div>
+                    <a href="#" class="forgot-password">忘记密码?</a>
+                </div>
+                
+                <button type="submit" class="btn-login">登录</button>
+            </form>
+            
+            <div class="divider">
+                <span>其他登录方式</span>
+            </div>
+            
+            <div class="social-login">
+                <a href="#" class="social-btn wechat">
+                    <i class="fab fa-weixin"></i>
+                </a>
+                <a href="#" class="social-btn qq">
+                    <i class="fab fa-qq"></i>
+                </a>
+                <a href="#" class="social-btn weibo">
+                    <i class="fab fa-weibo"></i>
+                </a>
+            </div>
+            
+            <div class="register-link">
+                还没有账号？<a href="#">立即注册</a>
+            </div>
+            
+            <div class="footer">
+                <p>©2023 微博 公司 版权所有</p>
+                <p>
+                    <a href="#">关于微博</a> | 
+                    <a href="#">微博客服</a> | 
+                    <a href="#">隐私政策</a> | 
+                    <a href="#">用户协议</a> | 
+                    <a href="#">帮助中心</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的表单验证
+        document.querySelector('.login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username) {
+                alert('请输入手机号或邮箱');
+                return;
+            }
+            
+            if (!password) {
+                alert('请输入密码');
+                return;
+            }
+            
+            // 模拟登录成功
+            alert('登录成功！即将跳转到微博首页...');
+            // 在实际应用中这里会有跳转逻辑
+        });
+        
+        // 添加简单的交互效果
+        const socialBtns = document.querySelectorAll('.social-btn');
+        socialBtns.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const platform = this.querySelector('i').className.split(' ')[1].split('-')[1];
+                alert(`您选择了使用${platform === 'weixin' ? '微信' : 
+                        platform === 'qq' ? 'QQ' : '微博'}登录`);
+            });
+        });
+    </script>
+</body>
+</html>
