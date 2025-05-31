@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>杨浩然！你为什么不回我消息？</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        :root {
+            --yt-red: #FF0000;
+            --yt-dark: #121212;
+            --yt-dark-gray: #181818;
+            --yt-light-gray: #303030;
+            --yt-text: #FFFFFF;
+            --yt-text-secondary: #AAAAAA;
+            --yt-blue: #3EA6FF;
+            --yt-accent: #FF4E45;
+        }
+
+        body {
+            background-color: var(--yt-dark);
+            color: var(--yt-text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* 顶部导航栏 */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            height: 64px;
+            background-color: var(--yt-dark-gray);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .header.scrolled {
+            height: 56px;
+            background-color: rgba(24, 24, 24, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            color: var(--yt-red);
+            font-size: 36px;
+            margin-right: 15px;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: -0.5px;
+            background: linear-gradient(45deg, var(--yt-red), var(--yt-accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--yt-text);
+            font-weight: 500;
+            position: relative;
+            padding: 8px 0;
+            transition: all 0.3s;
+        }
+
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--yt-red);
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--yt-red);
+        }
+
+        .nav-link:hover:after {
+            width: 100%;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .action-btn {
+            background: var(--yt-light-gray);
+            border: none;
+            color: var(--yt-text);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: var(--yt-blue);
+            transform: scale(1.1);
+        }
+
+        /* 英雄区域 */
+        .hero {
+            text-align: center;
+            padding: 80px 20px 60px;
+            background: linear-gradient(rgba(18, 18, 18, 0.8), rgba(18, 18, 18, 0.9)), 
+                        url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            color: var(--yt-text-secondary);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .angry-btn {
+            background: linear-gradient(45deg, var(--yt-red), var(--yt-accent));
+            color: white;
+            border: none;
+            padding: 16px 50px;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .angry-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.6);
+        }
+
+        .angry-btn:after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 20px;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(25deg);
+            transition: all 0.5s;
+        }
+
+        .angry-btn:hover:after {
+            left: 120%;
+        }
+
+        /* 内容区域 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 20px;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .section-title:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 80%;
+            background: var(--yt-red);
+            border-radius: 4px;
+        }
+
+        /* 分类标签 */
+        .categories {
+            display: flex;
+            overflow-x: auto;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+            gap: 15px;
+            scrollbar-width: none;
+        }
+
+        .categories::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category {
+            background: var(--yt-light-gray);
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-size: 1rem;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .category:hover {
+            background: #2a2a2a;
+            transform: translateY(-3px);
+        }
+
+        .category.active {
+            background: var(--yt-red);
+            color: white;
+            border-color: var(--yt-red);
+        }
+
+        /* 内容网格 */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        /* 卡片设计 */
+        .card {
+            background: var(--yt-dark-gray);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.4s;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: translateY(0);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(255, 0, 0, 0.2);
+        }
+
+        .card-image {
+            height: 180px;
+            background: var(--yt-light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--yt-red);
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-image:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255, 0, 0, 0.1), rgba(62, 166, 255, 0.1));
+        }
+
+        .card-content {
+            padding: 25px;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--yt-text);
+        }
+
+        .card-text {
+            color: var(--yt-text-secondary);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--yt-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .read-more {
+            color: var(--yt-blue);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+
+        .read-more:hover {
+            color: var(--yt-text);
+            gap: 10px;
+        }
+
+        /* 骨架屏 */
+        .skeleton {
+            background: linear-gradient(90deg, #2a2a2a 25%, #333 50%, #2a2a2a 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        .skeleton.image {
+            height: 180px;
+            border-radius: 0;
+        }
+
+        .skeleton.title {
+            height: 24px;
+            width: 70%;
+            margin-bottom: 15px;
+        }
+
+        .skeleton.text {
+            height: 16px;
+            margin-bottom: 10px;
+        }
+
+        .skeleton.text.short {
+            width: 85%;
+        }
+
+        .skeleton.text.medium {
+            width: 70%;
+        }
+
+        .skeleton.footer {
+            height: 14px;
+            width: 40%;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* 愤怒量表 */
+        .anger-meter {
+            background: var(--yt-dark-gray);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 60px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .meter-title {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: var(--yt-red);
+            text-align: center;
+        }
+
+        .meter-container {
+            height: 40px;
+            background: var(--yt-light-gray);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .meter-fill {
+            height: 100%;
+            width: 92%;
+            background: linear-gradient(90deg, var(--yt-red), var(--yt-accent));
+            border-radius: 20px;
+            position: relative;
+            transition: width 1.5s ease-out;
+        }
+
+        .meter-labels {
+            display: flex;
+            justify-content: space-between;
+            color: var(--yt-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .meter-value {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-top: 10px;
+            font-weight: bold;
+            color: var(--yt-red);
+        }
+
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--yt-dark-gray);
+            margin-top: 60px;
+            border-top: 1px solid var(--yt-light-gray);
+        }
+
+        .footer p {
+            color: var(--yt-text-secondary);
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .signature {
+            font-size: 1.2rem;
+            color: var(--yt-blue);
+            font-weight: bold;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="header" id="header">
+        <div class="logo-container">
+            <div class="logo">
+                <i class="fas fa-fire"></i>
+            </div>
+            <div class="logo-text">杨浩然不回消息记录</div>
+        </div>
+        
+        <div class="nav-links">
+            <a href="#" class="nav-link">首页</a>
+            <a href="#" class="nav-link">消息记录</a>
+            <a href="#" class="nav-link">未回复统计</a>
+            <a href="#" class="nav-link">愤怒指数</a>
+            <a href="#" class="nav-link">最后通牒</a>
+        </div>
+        
+        <div class="user-actions">
+            <button class="action-btn">
+                <i class="fas fa-bell"></i>
+            </button>
+            <button class="action-btn" id="profile-btn">
+                <i class="fas fa-user"></i>
+            </button>
+        </div>
+    </header>
+    
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>杨浩然！你为什么不回我消息？</h1>
+            <p>这是杨开青对杨浩然不回消息的正式抗议</p>
+            <button class="angry-btn" id="angry-btn">
+                <i class="fas fa-bolt"></i> 查看杨浩然的罪行
+            </button>
+        </div>
+    </section>
+    
+    <!-- 主要内容区域 -->
+    <div class="container">
+        <h2 class="section-title">杨浩然不回消息的罪证</h2>
+        
+        <!-- 分类标签 -->
+        <div class="categories" id="categories">
+            <div class="category active">全部</div>
+            <div class="category">微信已读不回</div>
+            <div class="category">短信石沉大海</div>
+            <div class="category">电话无人接听</div>
+            <div class="category">社交媒体无视</div>
+            <div class="category">重要消息忽略</div>
+        </div>
+        
+        <!-- 内容网格 -->
+        <div class="content-grid" id="content-grid">
+            <!-- 骨架屏占位 -->
+            <div class="card">
+                <div class="skeleton image"></div>
+                <div class="card-content">
+                    <div class="skeleton title"></div>
+                    <div class="skeleton text short"></div>
+                    <div class="skeleton text medium"></div>
+                    <div class="skeleton text short"></div>
+                    <div class="skeleton footer"></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="skeleton image"></div>
+                <div class="card-content">
+                    <div class="skeleton title"></div>
+                    <div class="skeleton text short"></div>
+                    <div class="skeleton text medium"></div>
+                    <div class="skeleton text short"></div>
+                    <div class="skeleton footer"></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="skeleton image"></div>
+                <div class="card-content">
+                    <div class="skeleton title"></div>
+                    <div class="skeleton text short"></div>
+                    <div class="skeleton text medium"></div>
+                    <div class="skeleton text short"></div>
+                    <div class="skeleton footer"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 愤怒量表 -->
+        <div class="anger-meter">
+            <h3 class="meter-title">杨开青的愤怒指数</h3>
+            <div class="meter-container">
+                <div class="meter-fill" id="meter-fill"></div>
+            </div>
+            <div class="meter-labels">
+                <span>平静</span>
+                <span>不满</span>
+                <span>生气</span>
+                <span>愤怒</span>
+                <span>暴怒</span>
+            </div>
+            <div class="meter-value">91% - 极度愤怒</div>
+        </div>
+        
+        <h2 class="section-title">未回复消息时间线</h2>
+        
+        <!-- 时间线内容网格 -->
+        <div class="content-grid" id="timeline-grid">
+            <!-- 骨架屏占位 -->
+            <div class="card">
+                <div class="skeleton image"></div>
+                <div class="card-content">
+                    <div class="skeleton title"></div>
+                    <div class="skeleton text short"></div>
+                    <div class="skeleton text medium"></div>
+                    <div class="skeleton text short"></div>
+                    <div class="skeleton footer"></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="skeleton image"></div>
+                <div class="card-content">
+                    <div class="skeleton title"></div>
+                    <div class="skeleton text short"></div>
+                    <div class="skeleton text medium"></div>
+                    <div class="skeleton text short"></div>
+                    <div class="skeleton footer"></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="skeleton image"></div>
+                <div class="card-content">
+                    <div class="skeleton title"></div>
+                    <div class="skeleton text short"></div>
+                    <div class="skeleton text medium"></div>
+                    <div class="skeleton text short"></div>
+                    <div class="skeleton footer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <p>本网站记录了杨浩然无视杨开青消息的种种罪行</p>
+        <p>最后更新: <span id="current-date"></span> - 杨浩然仍然没有回复</p>
+        <p class="signature">- 愤怒的杨开青 -</p>
+    </footer>
+
+    <script>
+        // 设置当前日期
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('zh-CN', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        
+        // 滚动时标题栏变化
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+        
+        // 分类标签交互
+        function setupCategories() {
+            const categories = document.querySelectorAll('.category');
+            categories.forEach(category => {
+                category.addEventListener('click', function() {
+                    categories.forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        }
+        
+        // 愤怒指数动画
+        function animateAngerMeter() {
+            const meterFill = document.getElementById('meter-fill');
+            meterFill.style.width = '0';
+            
+            setTimeout(() => {
+                meterFill.style.width = '92%';
+            }, 500);
+        }
+        
+        // 模拟内容加载
+        function loadContent() {
+            const contentGrid = document.getElementById('content-grid');
+            const timelineGrid = document.getElementById('timeline-grid');
+            
+            // 模拟网络延迟
+            setTimeout(() => {
+                contentGrid.innerHTML = '';
+                timelineGrid.innerHTML = '';
+                
+                const contents = [
+                    {
+                        title: "QQ消息已读不回",
+                        text: "2025年5月31日，发送重要问题后显示'已读'，但至今未收到任何回复。这是第N次QQ已读不回记录。",
+                        icon: "fa-comment",
+                        date: "1周前"
+                    },
+                    {
+                        title: "消息被忽略",
+                        text: "在杨浩然放假当天发送精心准备的祝福消息，48小时后仍未得到任何回应。这是连续第N次发生这种情况。",
+                        icon: "fa-birthday-cake",
+                        date: "14天前"
+                    },
+                    {
+                        title: "紧急求助无回应",
+                        text: "2025年2月29日，因紧急情况发送求助消息，显示已送达但未读。",
+                        icon: "fa-exclamation-triangle",
+                        date: "1个月前"
+                    },
+                    {
+                        title: "游戏活跃却无视私信",
+                        text: "在共同游戏中看到杨浩然活跃发言，但私信消息已读未回超过72小时。这是典型的故意忽视行为。",
+                        icon: "fa-comments",
+                        date: "N天前"
+                    },
+                    {
+                        title: "重要活动邀请未答复",
+                        text: "发送重要活动邀请，已读后无任何回复。活动当天杨浩然未出席，事后也未解释原因。",
+                        icon: "fa-calendar-check",
+                        date: "3周前"
+                    },
+                    {
+                        title: "连续5条消息无回应",
+                        text: "在三天内发送5条不同主题的消息，涵盖问候、问题等内容，全部未得到任何形式的回复。",
+                        icon: "fa-envelope",
+                        date: "某天"
+                    }
+                ];
+                
+                const timeline = [
+                    {
+                        title: "2024年13月：不知名信息未回复",
+                        text: "发送信息后未收到任何回应，而杨浩然在游戏保持上线。",
+                        icon: "fa-calendar",
+                        date: "13月1日"
+                    },
+                    {
+                        title: "2025年3月：求助信息被忽略",
+                        text: "请求帮忙的建议信息被完全忽略，尽管杨浩然当天在游戏活跃。",
+                        icon: "fa-hands-helping",
+                        date: "3月15日"
+                    },
+                    {
+                        title: "2025年5月：消息提醒无回应",
+                        text: "邀请杨浩然打第五人格，消息未回应。",
+                        icon: "fa-gift",
+                        date: "5月19日"
+                    },
+                    {
+                        title: "2024年7月：紧急情况无回复",
+                        text: "发送紧急求助信息，显示已送达但未读，48小时后问题自行解决。",
+                        icon: "fa-ambulance",
+                        date: "7月8日"
+                    },
+                    {
+                        title: "2024年8月：重要决定无反馈",
+                        text: "关于共同事务的重要决定需要确认，发送消息后一周未收到回复。",
+                        icon: "fa-clipboard-check",
+                        date: "8月12日"
+                    },
+                    {
+                        title: "2024年9月：最后通牒被无视",
+                        text: "发送最后通牒要求解释不回消息的原因，已读但未回复。",
+                        icon: "fa-hourglass-end",
+                        date: "今天"
+                    }
+                ];
+                
+                // 添加内容卡片
+                contents.forEach(content => {
+                    const card = document.createElement('div');
+                    card.classList.add('card');
+                    
+                    card.innerHTML = `
+                        <div class="card-image">
+                            <i class="fas ${content.icon}"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 class="card-title">${content.title}</h3>
+                            <p class="card-text">${content.text}</p>
+                            <div class="card-footer">
+                                <span>${content.date}</span>
+                                <a href="details.html" class="read-more">详情 <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    `;
+                    
+                    contentGrid.appendChild(card);
+                });
+                
+                // 添加时间线卡片
+                timeline.forEach(item => {
+                    const card = document.createElement('div');
+                    card.classList.add('card');
+                    
+                    card.innerHTML = `
+                        <div class="card-image">
+                            <i class="fas ${item.icon}"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 class="card-title">${item.title}</h3>
+                            <p class="card-text">${item.text}</p>
+                            <div class="card-footer">
+                                <span>${item.date}</span>
+                                <a href="timeline-details.html" class="read-more">详情 <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    `;
+                    
+                    timelineGrid.appendChild(card);
+                });
+            }, 2000);
+        }
+        
+        // 按钮点击效果
+        function setupAngryButton() {
+            const btn = document.getElementById('angry-btn');
+            btn.addEventListener('click', function() {
+                // 震动效果
+                btn.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    btn.style.animation = '';
+                }, 500);
+                
+                // 添加自定义动画
+                document.styleSheets[0].insertRule(`
+                    @keyframes shake {
+                        0% { transform: translateX(0); }
+                        20% { transform: translateX(-10px); }
+                        40% { transform: translateX(10px); }
+                        60% { transform: translateX(-10px); }
+                        80% { transform: translateX(10px); }
+                        100% { transform: translateX(0); }
+                    }
+                `, 0);
+                
+                // 跳转到详情页
+                setTimeout(() => {
+                    window.location.href = 'details.html';
+                }, 1000);
+            });
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            setupCategories();
+            animateAngerMeter();
+            loadContent();
+            setupAngryButton();
+            
+            // 添加骨架屏动画
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes loading {
+                    0% { background-position: 200% 0; }
+                    100% { background-position: -200% 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>
