@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微信 - 生活方式</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        :root {
+            --wechat-green: #07C160;
+            --dark-green: #06AD56;
+            --darker-green: #059c4e;
+            --light-gray: #f8f8f8;
+            --lighter-gray: #fafafa;
+            --text-dark: #333;
+            --text-gray: #666;
+            --text-light-gray: #999;
+            --border-color: #e5e5e5;
+            --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        body {
+            background-color: #fff;
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* 导航栏样式 */
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.98);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 8%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+        }
+        
+        .navbar.scrolled {
+            padding: 10px 8%;
+            background-color: rgba(255, 255, 255, 0.99);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            height: 36px;
+        }
+        
+        .logo svg {
+            height: 36px;
+            width: auto;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin: 0 20px;
+            position: relative;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 8px 0;
+        }
+        
+        .nav-links a:hover {
+            color: var(--wechat-green);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--wechat-green);
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .download-btn {
+            background-color: var(--wechat-green);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 24px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(7, 193, 96, 0.15);
+            letter-spacing: 0.5px;
+        }
+        
+        .download-btn:hover {
+            background-color: var(--dark-green);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(7, 193, 96, 0.25);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-dark);
+        }
+        
+        /* 轮播图样式 */
+        .hero-slider {
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            margin-top: 66px;
+        }
+        
+        .slider-container {
+            height: 100%;
+            width: 100%;
+            position: relative;
+        }
+        
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            display: flex;
+            align-items: center;
+            padding: 0 8%;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            z-index: 1;
+        }
+        
+        .slide-1 {
+            background: linear-gradient(135deg, rgba(7, 193, 96, 0.08) 0%, rgba(255, 255, 255, 1) 100%);
+        }
+        
+        .slide-2 {
+            background: linear-gradient(135deg, rgba(0, 122, 255, 0.08) 0%, rgba(255, 255, 255, 1) 100%);
+        }
+        
+        .slide-3 {
+            background: linear-gradient(135deg, rgba(247, 147, 26, 0.08) 0%, rgba(255, 255, 255, 1) 100%);
+        }
+        
+        .slide-content {
+            max-width: 600px;
+            z-index: 2;
+        }
+        
+        .slide h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+        
+        .slide-1 h1 span {
+            color: var(--wechat-green);
+        }
+        
+        .slide-2 h1 span {
+            color: #007aff;
+        }
+        
+        .slide-3 h1 span {
+            color: #f7931a;
+        }
+        
+        .slide p {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+        
+        .slide-img {
+            position: absolute;
+            right: 8%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45%;
+            max-width: 600px;
+            z-index: 1;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(-50%) translateX(0); }
+            50% { transform: translateY(-53%) translateX(10px); }
+            100% { transform: translateY(-50%) translateX(0); }
+        }
+        
+        .slider-dots {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            z-index: 10;
+        }
+        
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.2);
+            margin: 0 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .dot.active {
+            background: var(--wechat-green);
+            transform: scale(1.2);
+        }
+        
+        /* 功能展示部分 */
+        .features {
+            padding: 100px 8%;
+            background-color: var(--lighter-gray);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+            font-weight: 600;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background-color: var(--wechat-green);
+        }
+        
+        .section-title p {
+            color: var(--text-gray);
+            max-width: 700px;
+            margin: 20px auto 0;
+            font-size: 1.1rem;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--card-shadow);
+        }
+        
+        .feature-icon {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(7, 193, 96, 0.05) 0%, rgba(255, 255, 255, 1) 100%);
+        }
+        
+        .feature-icon i {
+            font-size: 70px;
+            color: var(--wechat-green);
+            transition: var(--transition);
+        }
+        
+        .feature-card:hover .feature-icon i {
+            transform: scale(1.1);
+        }
+        
+        .feature-content {
+            padding: 25px;
+        }
+        
+        .feature-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+        
+        .feature-content p {
+            color: var(--text-gray);
+            font-size: 1.05rem;
+        }
+        
+        /* 下载区域 */
+        .download-section {
+            padding: 100px 8%;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(7, 193, 96, 0.05) 0%, rgba(255, 255, 255, 1) 100%);
+        }
+        
+        .download-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .devices {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin: 50px 0;
+        }
+        
+        .device {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .device-icon {
+            width: 90px;
+            height: 90px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+        }
+        
+        .device:hover .device-icon {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+        
+        .device-icon i {
+            font-size: 40px;
+            color: var(--wechat-green);
+        }
+        
+        .device-name {
+            font-weight: 500;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .device-desc {
+            color: var(--text-light-gray);
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            min-height: 40px;
+        }
+        
+        /* 页脚 */
+        .footer {
+            background: linear-gradient(to bottom, #222 0%, #111 100%);
+            color: #fff;
+            padding: 70px 8% 30px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--wechat-green);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: #aaa;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+        
+        .footer-links a:hover {
+            color: var(--wechat-green);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #333;
+            color: #777;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+        
+        .wechat-qr {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: var(--wechat-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+        
+        .wechat-qr:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .slide h1 {
+                font-size: 2.8rem;
+            }
+            
+            .slide-img {
+                width: 50%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 5%;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero-slider {
+                height: auto;
+                padding: 100px 0 50px;
+            }
+            
+            .slide {
+                position: relative;
+                opacity: 1;
+                height: auto;
+                padding: 50px 5%;
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .slide-content {
+                max-width: 100%;
+                margin-bottom: 50px;
+            }
+            
+            .slide p {
+                margin: 0 auto 30px;
+            }
+            
+            .slide-img {
+                position: relative;
+                width: 90%;
+                max-width: 400px;
+                right: auto;
+                top: auto;
+                transform: none;
+                margin: 0 auto;
+            }
+            
+            .slider-dots {
+                display: none;
+            }
+            
+            .features, .download-section {
+                padding: 70px 5%;
+            }
+            
+            .devices {
+                flex-wrap: wrap;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .slide h1 {
+                font-size: 2.2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .devices {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="logo">
+            <svg viewBox="0 0 56 18" width="120" height="36">
+                <path d="M39.04 3.67c-1.28 0-2.3.4-3.08 1.18-.78.78-1.17 1.8-1.17 3.08 0 1.28.39 2.3 1.17 3.08.78.78 1.8 1.17 3.08 1.17 1.28 0 2.3-.39 3.08-1.17.78-.78 1.17-1.8 1.17-3.08 0-1.28-.39-2.3-1.17-3.08-.78-.78-1.8-1.18-3.08-1.18zm-22.96 0c-1.28 0-2.3.4-3.08 1.18-.78.78-1.17 1.8-1.17 3.08 0 1.28.39 2.3 1.17 3.08.78.78 1.8 1.17 3.08 1.17 1.28 0 2.3-.39 3.08-1.17.78-.78 1.17-1.8 1.17-3.08 0-1.28-.39-2.3-1.17-3.08-.78-.78-1.8-1.18-3.08-1.18z" fill="#07C160"></path>
+                <path d="M16.08 0C7.2 0 0 7.2 0 16.08c0 8.88 7.2 16.08 16.08 16.08 8.88 0 16.08-7.2 16.08-16.08C32.16 7.2 24.96 0 16.08 0zm0 28.04c-6.6 0-11.96-5.36-11.96-11.96S9.48 4.12 16.08 4.12s11.96 5.36 11.96 11.96-5.36 11.96-11.96 11.96z" fill="#07C160"></path>
+                <path d="M56 16.08c0-8.88-7.2-16.08-16.08-16.08-8.88 0-16.08 7.2-16.08 16.08 0 8.88 7.2 16.08 16.08 16.08 8.88 0 16.08-7.2 16.08-16.08zm-16.08 11.96c-6.6 0-11.96-5.36-11.96-11.96s5.36-11.96 11.96-11.96 11.96 5.36 11.96 11.96-5.36 11.96-11.96 11.96z" fill="#07C160"></path>
+            </svg>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">功能</a></li>
+            <li><a href="#">下载</a></li>
+            <li><a href="#">微信团队</a></li>
+            <li><a href="#">关于</a></li>
+        </ul>
+        <button class="download-btn">下载微信</button>
+        <div class="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+
+    <!-- 轮播图/主视觉区域 -->
+    <section class="hero-slider">
+        <div class="slider-container">
+            <div class="slide slide-1 active">
+                <div class="slide-content">
+                    <h1>微信，是<span>一种生活方式</span></h1>
+                    <p>微信，是一个生活方式。超过十亿人使用的手机应用。支持发送语音短信、视频、图片和文字。可以群聊，仅耗少量流量，适合大部分智能手机。</p>
+                    <button class="download-btn">免费下载</button>
+                </div>
+                <img src="https://res.wx.qq.com/a/wx_fed/assets/res/NTI4MWU5.png" alt="微信界面展示" class="slide-img">
+            </div>
+            
+            <div class="slide slide-2">
+                <div class="slide-content">
+                    <h1>发现<span>更多精彩</span></h1>
+                    <p>朋友圈、公众号、小程序、视频号、微信支付... 微信不断推出创新功能，满足您的社交、娱乐、购物、支付等全方位需求。</p>
+                    <button class="download-btn">探索功能</button>
+                </div>
+                <img src="https://res.wx.qq.com/a/wx_fed/assets/res/OTE0YTAw.png" alt="微信朋友圈" class="slide-img">
+            </div>
+            
+            <div class="slide slide-3">
+                <div class="slide-content">
+                    <h1>安全便捷的<span>支付体验</span></h1>
+                    <p>微信支付，让生活更简单。无论是线上购物、线下消费、转账收款，还是生活缴费，微信支付都能为您提供安全便捷的支付体验。</p>
+                    <button class="download-btn">了解微信支付</button>
+                </div>
+                <img src="https://res.wx.qq.com/a/wx_fed/assets/res/OTk5YjY1.png" alt="微信支付" class="slide-img">
+            </div>
+        </div>
+        
+        <div class="slider-dots">
+            <div class="dot active" data-slide="0"></div>
+            <div class="dot" data-slide="1"></div>
+            <div class="dot" data-slide="2"></div>
+        </div>
+    </section>
+
+    <!-- 功能展示区域 -->
+    <section class="features">
+        <div class="section-title">
+            <h2>微信功能</h2>
+            <p>微信提供多种功能，让沟通更简单，生活更便捷</p>
+        </div>
+        
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>即时通讯</h3>
+                    <p>发送文字、语音、图片和视频消息，与朋友保持联系。支持一对一聊天和群聊功能，方便多人沟通。</p>
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>微信支付</h3>
+                    <p>安全便捷的移动支付解决方案。支持转账、收款、手机充值、生活缴费、购物等多种支付场景。</p>
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-compass"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>朋友圈</h3>
+                    <p>分享生活点滴，了解朋友动态。发布照片、视频和文字，与好友互动交流，记录精彩瞬间。</p>
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>小程序</h3>
+                    <p>无需下载安装即可使用的应用。涵盖各类服务，从购物、出行到生活工具，触手可及。</p>
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-qrcode"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>二维码</h3>
+                    <p>添加好友、支付、登录等多种功能一码搞定。通过扫描二维码快速完成各种操作。</p>
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>公众号</h3>
+                    <p>获取资讯、服务与内容。关注品牌、媒体和机构账号，接收最新消息和专属服务。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 下载区域 -->
+    <section class="download-section">
+        <div class="section-title">
+            <h2>下载微信</h2>
+            <p>选择您的设备平台，免费下载微信客户端</p>
+        </div>
+        
+        <div class="download-content">
+            <div class="devices">
+                <div class="device">
+                    <div class="device-icon">
+                        <i class="fab fa-apple"></i>
+                    </div>
+                    <h3 class="device-name">iPhone</h3>
+                    <p class="device-desc">适用于 iOS 12.0 及更高版本</p>
+                    <button class="download-btn">App Store 下载</button>
+                </div>
+                
+                <div class="device">
+                    <div class="device-icon">
+                        <i class="fab fa-android"></i>
+                    </div>
+                    <h3 class="device-name">Android</h3>
+                    <p class="device-desc">适用于 Android 5.0 及更高版本</p>
+                    <button class="download-btn">官方下载</button>
+                </div>
+                
+                <div class="device">
+                    <div class="device-icon">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <h3 class="device-name">Windows</h3>
+                    <p class="device-desc">适用于 Windows 7 及更高版本</p>
+                    <button class="download-btn">下载</button>
+                </div>
+                
+                <div class="device">
+                    <div class="device-icon">
+                        <i class="fab fa-apple"></i>
+                    </div>
+                    <h3 class="device-name">Mac</h3>
+                    <p class="device-desc">适用于 macOS 10.12 及更高版本</p>
+                    <button class="download-btn">下载</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-column">
+                <h3>关于微信</h3>
+                <ul class="footer-links">
+                    <li><a href="#">关于我们</a></li>
+                    <li><a href="#">加入我们</a></li>
+                    <li><a href="#">媒体报道</a></li>
+                    <li><a href="#">企业合作</a></li>
+                    <li><a href="#">用户协议</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>帮助与支持</h3>
+                <ul class="footer-links">
+                    <li><a href="#">常见问题</a></li>
+                    <li><a href="#">使用教程</a></li>
+                    <li><a href="#">服务协议</a></li>
+                    <li><a href="#">隐私政策</a></li>
+                    <li><a href="#">投诉指引</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>开发者</h3>
+                <ul class="footer-links">
+                    <li><a href="#">开放平台</a></li>
+                    <li><a href="#">小程序开发</a></li>
+                    <li><a href="#">公众号平台</a></li>
+                    <li><a href="#">企业微信</a></li>
+                    <li><a href="#">微信云开发</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>关注我们</h3>
+                <ul class="footer-links">
+                    <li><a href="#">微信公众号</a></li>
+                    <li><a href="#">新浪微博</a></li>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Instagram</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>Copyright © 1998-2023 Tencent Inc. All Rights Reserved.</p>
+            <p>腾讯公司 版权所有 | 粤网文[2017]6138-1456号 | 粤ICP备19084507号-1</p>
+            <p>本网站仅用于学习目的，非官方微信网站</p>
+        </div>
+    </footer>
+    
+    <div class="wechat-qr">
+        <i class="fas fa-qrcode"></i>
+    </div>
+
+    <script>
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // 轮播图功能
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+        let currentSlide = 0;
+        
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            currentSlide = (n + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        }
+        
+        // 自动轮播
+        setInterval(() => {
+            showSlide(currentSlide + 1);
+        }, 5000);
+        
+        // 点选轮播
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                showSlide(index);
+            });
+        });
+        
+        // 下载按钮效果
+        const downloadButtons = document.querySelectorAll('.download-btn');
+        downloadButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const device = this.closest('.device') ? 
+                    this.closest('.device').querySelector('.device-name').textContent : 
+                    '微信';
+                alert(`下载${device}客户端功能仅作演示，实际使用请访问官方下载页面`);
+            });
+        });
+        
+        // 右下角二维码按钮
+        document.querySelector('.wechat-qr').addEventListener('click', function() {
+            alert('请扫描二维码关注微信官方公众号');
+        });
+    </script>
+</body>
+</html>
